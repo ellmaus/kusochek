@@ -63,6 +63,8 @@ export default function Products({
         )}
       </div>
 
+      <p className="muted small">Соль, масло и вода считаются, что есть всегда.</p>
+
       {q ? (
         <section className="section">
           <h2>Результаты поиска</h2>

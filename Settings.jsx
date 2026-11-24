@@ -18,7 +18,7 @@ function Toggle({ label, checked, onChange }) {
   )
 }
 
-export default function Settings({ energy, setEnergy, settings, setSettings, onReset }) {
+export default function Settings({ energy, setEnergy, settings, setSettings, onReset, onShowIntro }) {
   const [confirm, setConfirm] = useState(false)
   const set = (key) => (value) => setSettings((s) => ({ ...s, [key]: value }))
 
@@ -57,6 +57,9 @@ export default function Settings({ energy, setEnergy, settings, setSettings, onR
 
       <section className="section">
         <h2>Данные</h2>
+        <button className="btn btn-soft" onClick={onShowIntro}>
+          Показать знакомство снова
+        </button>
         <p className="muted">
           Всё хранится только на этом устройстве, в браузере.
         </p>

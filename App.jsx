@@ -8,8 +8,9 @@ import Results from './screens/Results.jsx'
 import Recipe from './screens/Recipe.jsx'
 import Favorites from './screens/Favorites.jsx'
 import Settings from './screens/Settings.jsx'
+import Onboarding from './screens/Onboarding.jsx'
 
-const DEFAULT_OWNED = ['eggs', 'bread', 'cheese', 'tomato']
+const DEFAULT_OWNED = []
 const DEFAULT_SETTINGS = { noStove: false, veg: false }
 
 // Диплинки из бота: /?tab=products|favorites|settings или /?screen=results
@@ -20,12 +21,21 @@ function readStartParams() {
       ? p.get('tab')
       : 'home'
     const stack = p.get('screen') === 'results' ? [{ name: 'results' }] : []
-    return { tab, stack }
+    const deep = p.has('tab') || p.has('screen')
+    return { tab, stack, deep }
   } catch {
-    return { tab: 'home', stack: [] }
+    return { tab: 'home', stack: [], deep: false }
   }
 }
 const START = readStartParams()
+
+// Тем, кто уже пользовался приложением, знакомство не показываем
+let HAD_DATA = false
+try {
+  HAD_DATA = localStorage.getItem('mk:owned') !== null
+} catch {
+  /* ignore */
+}
 
 export default function App() {
   // Всё это сохраняется в localStorage
@@ -34,6 +44,7 @@ export default function App() {
   const [customProducts, setCustomProducts] = useLocalStorage('mk:custom', [])
   const [favorites, setFavorites] = useLocalStorage('mk:favorites', [])
   const [settings, setSettings] = useLocalStorage('mk:settings', DEFAULT_SETTINGS)
+  const [onboarded, setOnboarded] = useLocalStorage('mk:onboarded', HAD_DATA)
 
   // Простая навигация: вкладка + стек экранов поверх неё
   const [tab, setTab] = useState(START.tab)
@@ -91,6 +102,7 @@ export default function App() {
     setCustomProducts([])
     setFavorites([])
     setSettings(DEFAULT_SETTINGS)
+    setOnboarded(false)
   }
 
   // Названия продуктов для карточки на главной
@@ -173,6 +185,7 @@ export default function App() {
         settings={settings}
         setSettings={setSettings}
         onReset={resetAll}
+        onShowIntro={() => setOnboarded(false)}
       />
     )
   } else {
@@ -185,6 +198,24 @@ export default function App() {
         onPick={() => push({ name: 'results' })}
         onProducts={() => goTab('products')}
       />
+    )
+  }
+
+  // Знакомство при первом запуске (не показываем, если приложение открыли по ссылке на экран)
+  if (!onboarded && !START.deep) {
+    return (
+      <div className="app">
+        <Onboarding
+          energy={energy}
+          setEnergy={setEnergy}
+          owned={owned}
+          toggleProduct={toggleProduct}
+          onFinish={() => {
+            setOnboarded(true)
+            goTab('home')
+          }}
+        />
+      </div>
     )
   }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { productById, recipeById } from '../data.js'
+import { productById, recipeById, recipeTags } from '../data.js'
 import { Dish, Header, actionsWord } from '../components.jsx'
 
 export default function Recipe({ id, owned, favorites, toggleFav, onBack }) {
@@ -42,8 +42,16 @@ export default function Recipe({ id, owned, favorites, toggleFav, onBack }) {
         <span>
           🥄 {recipe.actions} {actionsWord(recipe.actions)}
         </span>
-        {recipe.noStove && <span className="tag">Без плиты</span>}
       </p>
+      {recipeTags(recipe).length > 0 && (
+        <div className="chips">
+          {recipeTags(recipe).map((t) => (
+            <span key={t} className="tag">
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
 
       <section className="section">
         <h2>Ингредиенты</h2>

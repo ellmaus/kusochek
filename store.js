@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { RECIPES, isVegetarian } from './data.js'
+import { RECIPES, FILTER_TESTS } from './data.js'
 
 // Состояние, которое сохраняется в localStorage (переживает перезагрузку)
 export function useLocalStorage(key, initial) {
@@ -27,14 +27,12 @@ export function useLocalStorage(key, initial) {
 // Рецепт с недостающими ингредиентами не исключается — показываем, чего не хватает.
 export function matchRecipes({ energy, owned, filters }) {
   const have = new Set(owned)
+  const active = Object.keys(filters).filter((k) => filters[k] && FILTER_TESTS[k])
   const result = []
 
   for (const recipe of RECIPES) {
     if (recipe.energy > energy) continue
-    if (filters.noStove && !recipe.noStove) continue
-    if (filters.quick && recipe.time > 5) continue
-    if (filters.simple && recipe.actions > 3) continue
-    if (filters.veg && !isVegetarian(recipe)) continue
+    if (!active.every((k) => FILTER_TESTS[k](recipe))) continue
 
     const missing = recipe.ingredients.filter((i) => !have.has(i))
     const matched = recipe.ingredients.length - missing.length

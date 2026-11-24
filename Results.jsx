@@ -1,13 +1,10 @@
-import React, { useMemo, useState } from 'react'
-import { ENERGY_LEVELS, productById } from '../data.js'
+import React, { useEffect, useMemo, useState } from 'react'
+import { ENERGY_LEVELS, FILTERS, productById } from '../data.js'
 import { matchRecipes } from '../store.js'
 import { Header, RecipeCard } from '../components.jsx'
 
-const FILTERS = [
-  { id: 'noStove', label: 'Без плиты' },
-  { id: 'quick', label: 'Быстро' },
-  { id: 'simple', label: 'Просто' },
-]
+const PAGE = 8
+const nameOf = (id) => (productById[id] ? productById[id].name.toLowerCase() : id)
 
 export default function Results({
   energy,
@@ -21,24 +18,28 @@ export default function Results({
 }) {
   const [filters, setFilters] = useState({
     noStove: !!settings.noStove,
-    quick: false,
-    simple: false,
     veg: !!settings.veg,
   })
   const [shuffle, setShuffle] = useState(0)
+  const [visible, setVisible] = useState(PAGE)
 
   const level = ENERGY_LEVELS.find((l) => l.id === energy)
   const matches = useMemo(() => {
     const list = matchRecipes({ energy, owned, filters })
-    // Кнопка «обновить» немного меняет порядок среди равных вариантов
+    // Кнопка «обновить» немного меняет порядок
     if (shuffle > 0 && list.length > 1) {
-      const k = shuffle % list.length
+      const k = (shuffle * PAGE) % list.length
       return [...list.slice(k), ...list.slice(0, k)]
     }
     return list
   }, [energy, owned, filters, shuffle])
 
+  // При смене фильтров показываем список с начала
+  useEffect(() => setVisible(PAGE), [energy, owned, filters])
+
   const toggleFilter = (id) => setFilters((f) => ({ ...f, [id]: !f[id] }))
+  const activeCount = Object.values(filters).filter(Boolean).length
+  const shown = matches.slice(0, visible)
 
   return (
     <div className="screen">
@@ -65,18 +66,25 @@ export default function Results({
         </div>
       </div>
 
-      <div className="chips filters">
-        {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            className={`chip ${filters[f.id] ? 'chip-on' : ''}`}
-            onClick={() => toggleFilter(f.id)}
-            aria-pressed={filters[f.id]}
-          >
-            {f.label}
-            {filters[f.id] && <span className="chip-mark">×</span>}
+      <div className="filters-wrap">
+        <div className="chips filters scroll">
+          {FILTERS.map((f) => (
+            <button
+              key={f.id}
+              className={`chip ${filters[f.id] ? 'chip-on' : ''}`}
+              onClick={() => toggleFilter(f.id)}
+              aria-pressed={!!filters[f.id]}
+            >
+              {f.label}
+              {filters[f.id] && <span className="chip-mark">×</span>}
+            </button>
+          ))}
+        </div>
+        {activeCount > 0 && (
+          <button className="link" onClick={() => setFilters({})}>
+            Сбросить фильтры
           </button>
-        ))}
+        )}
       </div>
 
       {matches.length === 0 ? (
@@ -86,28 +94,36 @@ export default function Results({
           <p className="muted">
             {owned.length === 0
               ? 'Добавь хотя бы пару продуктов, которые есть дома — и мы подберём еду.'
-              : 'Попробуй убрать фильтры, выбрать другой уровень энергии или добавить ещё продукты.'}
+              : 'Попробуй убрать часть фильтров, выбрать другой уровень энергии или добавить ещё продукты.'}
           </p>
           <button className="btn btn-primary" onClick={onProducts}>
             Добавить продукты
           </button>
         </div>
       ) : (
-        <div className="list">
-          {matches.map(({ recipe, missing }) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              missing={missing.map(nameOf)}
-              favorite={favorites.includes(recipe.id)}
-              onToggleFav={() => toggleFav(recipe.id)}
-              onOpen={() => onOpen(recipe.id)}
-            />
-          ))}
-        </div>
+        <>
+          <p className="muted">
+            Нашлось вариантов: {matches.length}
+          </p>
+          <div className="list">
+            {shown.map(({ recipe, missing }) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                missing={missing.map(nameOf)}
+                favorite={favorites.includes(recipe.id)}
+                onToggleFav={() => toggleFav(recipe.id)}
+                onOpen={() => onOpen(recipe.id)}
+              />
+            ))}
+          </div>
+          {visible < matches.length && (
+            <button className="btn btn-soft" onClick={() => setVisible((v) => v + PAGE)}>
+              Показать ещё
+            </button>
+          )}
+        </>
       )}
     </div>
   )
 }
-
-const nameOf = (id) => (productById[id] ? productById[id].name.toLowerCase() : id)
