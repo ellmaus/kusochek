@@ -118,7 +118,6 @@ export const FILTERS = [
   { id: 'fewDishes', label: 'Без мытья посуды' },
   { id: 'cold', label: 'Только холодное' },
   { id: 'noChop', label: 'Без нарезки' },
-  { id: 'familiar', label: 'Знакомое' },
   { id: 'batch', label: 'Несколько порций' },
   { id: 'veg', label: 'Вегетарианское' },
 ]
@@ -134,7 +133,6 @@ export const FILTER_TESTS = {
   fewDishes: (r) => r.fewDishes,
   cold: (r) => r.cold,
   noChop: (r) => r.noChop,
-  familiar: (r) => r.familiar,
   batch: (r) => r.batch,
   veg: isVegetarian,
 }
