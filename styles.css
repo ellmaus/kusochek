@@ -1,0 +1,706 @@
+:root {
+  --bg: #fff6ea;
+  --card: #fde6d6;
+  --card-soft: #fff0e4;
+  --peach: #f8cdb3;
+  --sage: #55704f;
+  --sage-dark: #46603f;
+  --sage-light: #dfe8d3;
+  --text: #4a3426;
+  --muted: #8a7263;
+  --line: #f0d8c6;
+  --danger: #b4533f;
+  --shadow: 0 6px 18px rgba(138, 94, 60, 0.12);
+  --shadow-sm: 0 2px 8px rgba(138, 94, 60, 0.1);
+  --radius: 22px;
+  --tabbar-h: 68px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'SF Pro Rounded', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+.content {
+  padding: 0 16px calc(var(--tabbar-h) + 28px + env(safe-area-inset-bottom));
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+  animation: fade 0.25s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+.small {
+  font-size: 13px;
+}
+.center {
+  text-align: center;
+}
+
+/* ---------- Шапка ---------- */
+.header {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  min-height: 44px;
+}
+.header-title {
+  text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn.ghost {
+  visibility: hidden;
+}
+
+/* ---------- Главная ---------- */
+.hero {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 190px;
+  padding: 18px 18px 0;
+  margin: 0 -16px;
+  background: linear-gradient(180deg, #fde9d3 0%, var(--bg) 100%);
+  border-radius: 0 0 36px 36px;
+  overflow: hidden;
+}
+.hero h1 {
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+.hero-text p {
+  margin-top: 8px;
+  font-size: 15px;
+}
+.hero-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-art .cat {
+  position: absolute;
+  right: 56px;
+  bottom: 14px;
+  font-size: 76px;
+  filter: drop-shadow(0 4px 6px rgba(138, 94, 60, 0.2));
+}
+.hero-art .cup {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  font-size: 36px;
+}
+.hero-art .leaf {
+  position: absolute;
+  opacity: 0.85;
+}
+.leaf-1 {
+  right: 18px;
+  top: 14px;
+  font-size: 30px;
+}
+.leaf-2 {
+  right: 80px;
+  top: 6px;
+  font-size: 34px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.section h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.energy-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.energy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 6px;
+  border-radius: 20px;
+  background: var(--card-soft);
+  border: 2px solid transparent;
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+  transition: transform 0.15s, background 0.15s, border-color 0.15s;
+}
+.energy-emoji {
+  font-size: 30px;
+}
+.energy.active {
+  background: var(--card);
+  border-color: var(--sage);
+  transform: translateY(-2px);
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.products-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+}
+.fridge {
+  font-size: 40px;
+}
+.products-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.chev {
+  font-size: 26px;
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+.chev.open {
+  transform: rotate(90deg);
+}
+
+/* ---------- Кнопки ---------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: transform 0.1s, filter 0.15s;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--sage);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(85, 112, 79, 0.3);
+}
+.btn-soft {
+  background: #fbe3a8;
+  color: var(--text);
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-big {
+  width: 100%;
+  padding: 17px;
+  font-size: 18px;
+}
+
+/* ---------- Чипы ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--card-soft);
+  border: 1.5px solid var(--line);
+  font-size: 14px;
+  font-weight: 500;
+}
+.chip-on {
+  background: var(--sage-light);
+  border-color: var(--sage);
+}
+.chip-miss {
+  background: #fff;
+  border-style: dashed;
+  color: var(--muted);
+}
+.chip-mark {
+  font-weight: 700;
+  color: var(--sage-dark);
+}
+.chip-x {
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 2px;
+  color: var(--sage-dark);
+}
+.filters {
+  margin-top: -4px;
+}
+
+/* ---------- Поиск и продукты ---------- */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: var(--card-soft);
+  border: 1.5px solid var(--line);
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 16px;
+}
+.clear {
+  font-size: 22px;
+  color: var(--muted);
+}
+
+.popular {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.pop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px;
+  border-radius: 18px;
+  background: var(--card-soft);
+  border: 2px solid transparent;
+  font-size: 13px;
+  box-shadow: var(--shadow-sm);
+}
+.pop-emoji {
+  font-size: 30px;
+}
+.pop-on {
+  background: var(--sage-light);
+  border-color: var(--sage);
+}
+
+.cats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cat-block {
+  background: var(--card-soft);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.cat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+}
+.cat-emoji {
+  font-size: 24px;
+}
+.cat-name {
+  flex: 1;
+  font-weight: 600;
+}
+.cat-items {
+  padding: 0 14px 14px;
+}
+.badge {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--sage);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ---------- Результаты и карточки ---------- */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--peach);
+}
+.banner-icon {
+  font-size: 30px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.recipe-card {
+  overflow: hidden;
+}
+.recipe-pic {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 18px 0 6px;
+  background: linear-gradient(160deg, #ffe9c8, #f8cdb3);
+}
+.recipe-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+  background: var(--card-soft);
+}
+.recipe-body h3 {
+  font-size: 19px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.missing {
+  font-size: 13px;
+  color: var(--danger);
+}
+.recipe-body .btn {
+  margin-top: 6px;
+}
+.tag {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--sage-light);
+  color: var(--sage-dark);
+  font-weight: 600;
+}
+
+.heart {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 22px;
+  color: var(--sage-dark);
+}
+.recipe-pic .heart {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow-sm);
+}
+.heart.on {
+  color: #d9604f;
+}
+
+/* ---------- Иллюстрации блюд ---------- */
+.dish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dish-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fffdf8, #f6e1c8);
+  box-shadow: inset 0 -6px 12px rgba(138, 94, 60, 0.12), var(--shadow);
+}
+.dish-lg .dish-plate {
+  width: 120px;
+  height: 120px;
+}
+.dish-lg .dish-emoji {
+  font-size: 62px;
+}
+.dish-xl .dish-plate {
+  width: 170px;
+  height: 170px;
+}
+.dish-xl .dish-emoji {
+  font-size: 92px;
+}
+
+/* ---------- Рецепт ---------- */
+.recipe-hero {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+  border-radius: 32px;
+  background: linear-gradient(160deg, #ffe9c8, #f8cdb3);
+}
+.recipe-title {
+  font-size: 26px;
+  font-weight: 800;
+}
+.notice {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #fbe3a8;
+  font-size: 14px;
+}
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.step-num {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f4a96b;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.tip {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #fbe9bd;
+}
+.tip-icon {
+  font-size: 26px;
+}
+
+/* ---------- Пустые состояния ---------- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 20px;
+  text-align: center;
+}
+.empty-emoji {
+  font-size: 54px;
+}
+
+/* ---------- Настройки ---------- */
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 5px;
+  border-radius: 999px;
+  background: var(--card-soft);
+}
+.segmented button {
+  padding: 9px 0;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.segmented .active {
+  background: var(--sage);
+  color: #fff;
+}
+.list-card {
+  padding: 4px 16px;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 0;
+  text-align: left;
+}
+.toggle-row + .toggle-row {
+  border-top: 1px solid var(--line);
+}
+.switch {
+  position: relative;
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: #e4d3c4;
+  transition: background 0.2s;
+  flex: none;
+}
+.switch.on {
+  background: var(--sage);
+}
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s;
+}
+.switch.on .knob {
+  transform: translateX(18px);
+}
+.row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.row .btn {
+  flex: 1;
+}
+.thanks {
+  padding: 14px;
+  border-radius: 18px;
+  background: #fbe3a8;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ---------- Нижняя навигация ---------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  background: rgba(255, 246, 234, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.tab-icon {
+  font-size: 22px;
+}
+.tab.active {
+  color: var(--sage-dark);
+  font-weight: 700;
+  background: var(--sage-light);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(85, 112, 79, 0.45);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
