@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { PRODUCTS } from './data.js'
 import { matchRecipes, useLocalStorage } from './store.js'
 import { TabBar } from './components.jsx'
@@ -40,9 +40,21 @@ export default function App() {
   const [stack, setStack] = useState(START.stack) //[{ name: 'results' | 'recipe' | 'products', id? }]
   const current = stack[stack.length - 1]
 
-  const push = useCallback((screen) => setStack((s) => [...s, screen]), [])
+  // Запоминаем, докуда была прокручена каждая страница, чтобы вернуться на то же место
+  const viewKey = current ? `${current.name}:${current.id || ''}` : `tab:${tab}`
+  const viewKeyRef = useRef(viewKey)
+  viewKeyRef.current = viewKey
+  const scrollPositions = useRef({})
+
+  const push = (screen) => {
+    scrollPositions.current[viewKeyRef.current] = window.scrollY
+    // Новый экран всегда открываем сверху
+    scrollPositions.current[`${screen.name}:${screen.id || ''}`] = 0
+    setStack((s) => [...s, screen])
+  }
   const back = useCallback(() => setStack((s) => s.slice(0, -1)), [])
   const goTab = (t) => {
+    scrollPositions.current[`tab:${t}`] = 0
     setStack([])
     setTab(t)
   }
@@ -111,25 +123,18 @@ export default function App() {
     return () => bb.offClick?.(handler)
   }, [stack.length, back])
 
-  // Прокрутка вверх при смене экрана
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [tab, current?.name, current?.id])
+  // При смене экрана: возвращаемся на сохранённое место или в начало
+  useLayoutEffect(() => {
+    window.scrollTo(0, scrollPositions.current[viewKey] || 0)
+  }, [viewKey])
+
+  // Результаты остаются «живыми» под рецептом, чтобы не терялись фильтры
+  const resultsOpen = stack.some((s) => s.name === 'results')
+  const showResults = current?.name === 'results'
 
   let content
-  if (current?.name === 'results') {
-    content = (
-      <Results
-        energy={energy}
-        owned={owned}
-        settings={settings}
-        favorites={favorites}
-        toggleFav={toggleFav}
-        onOpen={(id) => push({ name: 'recipe', id })}
-        onBack={back}
-        onProducts={() => push({ name: 'products' })}
-      />
-    )
+  if (showResults) {
+    content = null
   } else if (current?.name === 'recipe') {
     content = (
       <Recipe
@@ -185,7 +190,23 @@ export default function App() {
 
   return (
     <div className="app">
-      <main className="content">{content}</main>
+      <main className="content">
+        {resultsOpen && (
+          <div style={{ display: showResults ? 'block' : 'none' }}>
+            <Results
+              energy={energy}
+              owned={owned}
+              settings={settings}
+              favorites={favorites}
+              toggleFav={toggleFav}
+              onOpen={(id) => push({ name: 'recipe', id })}
+              onBack={back}
+              onProducts={() => push({ name: 'products' })}
+            />
+          </div>
+        )}
+        {content}
+      </main>
       <TabBar
         active={current?.name === 'products' ? 'products' : tab}
         onChange={goTab}
